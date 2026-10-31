@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Заменяем latest на стабильную ubuntu 22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' # Оставляем стабильную версию для гарантированной сборки NumPy
+          python-version: '3.11'
 
       - name: Install Buildozer dependencies
         run: |
@@ -27,10 +27,17 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev python3-setuptools
           pip3 install --user buildozer
 
+      - name: Automatically accept Android SDK licenses
+        run: |
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | id || true
+
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          buildozer -v android debug
+          # Запуск сборки с автоматическим принятием всех лицензий Google
+          yes | buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
