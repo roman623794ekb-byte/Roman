@@ -5,8 +5,14 @@ package.domain = org.demotazh
 source.dir = .
 source.include_exts = py,png,jpg,wav,mp3,ttf,otf
 version = 1.0.0
-requirements = python3,pygame,sdl2_image,sdl2_mixer,sdl2_ttf
+
+# Возвращаем чистый pygame (он сам подтянет нужные sdl2 модули)
+requirements = python3,pygame
+
+# Указываем правильный загрузчик именно для Pygame приложений
+p4a.bootstrap = pygame
 android.entrypoint = org.kivy.android.PythonActivity
+
 orientation = portrait
 fullscreen = 1
 android.minapi = 21
