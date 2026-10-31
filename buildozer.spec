@@ -1,4 +1,3 @@
-
 # (str) Название вашей игры на экране телефона
 title = Tic Tac Toe Pygame
 
