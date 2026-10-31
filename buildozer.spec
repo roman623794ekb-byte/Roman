@@ -1,4 +1,5 @@
-title = Ticaoegame
+[app]
+title = Tic Tac Toe Pygame
 package.name = tictactoepygame
 package.domain = org.demotazh
 source.dir = .
@@ -10,8 +11,6 @@ orientation = portrait
 fullscreen = 1
 android.minapi = 21
 android.api = 33
+android.ndk = 26b
 android.archs = arm64-v8a
 android.accept_sdk_license = True
-
-# Фиксируем стабильную версию NDK, чтобы избежать конфликтов компилятора C++
-android.ndk = 26b
