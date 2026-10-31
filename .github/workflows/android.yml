@@ -25,14 +25,15 @@ jobs:
         sudo apt update
         sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev \
         libncurses5-dev libsqlite3-dev cmake libffi-dev libssl-dev python3-pip \
-        python3-setuptools libltdl-dev libffi-dev \
-        libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+        python3-setuptools libltdl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
     - name: Установка Buildozer и Cython
       run: |
         pip3 install --upgrade pip
         pip3 install "buildozer>=1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Сборка APK
+    - name: Сборка APK с чистым Python 3.11
       run: |
+        # Полное удаление кэша сборщика перед запуском компиляции
+        rm -rf .buildozer/
         buildozer -v android debug
