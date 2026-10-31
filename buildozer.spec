@@ -20,7 +20,7 @@ version = 1.0.0
 
 # (list) Зависимости приложения.
 # ВАЖНО: Вместо kivy здесь указан pygame
-requirements = python3, pygame
+requirements = python3, pygame-ce
 
 # (str) Точка входа для Pygame (обязательный параметр для сборки Pygame на Android)
 android.entrypoint = org.kivy.android.PythonActivity
