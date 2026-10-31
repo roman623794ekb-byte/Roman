@@ -1,34 +1,38 @@
-name: Android CI
+[app]
 
-on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+# (str) Название вашей игры на экране телефона
+title = Tic Tac Toe Pygame
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# (str) Имя пакета (Строго маленькие латинские буквы, БЕЗ нижних подчеркиваний и спецсимволов)
+package.name = tictactoepygame
 
-    steps:
-    - name: Проверка репозитория
-      uses: actions/checkout@v4
+# (str) Домен пакета (уникальный идентификатор приложения)
+package.domain = org.demotazh
 
-    - name: Настройка Java (Обновлено до v5)
-      uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
-        cache: 'gradle'
+# (str) Папка с исходным кодом (точка означает текущую директорию)
+source.dir = .
 
-    - name: Разрешение на выполнение gradlew
-      run: chmod +x gradlew
+# (list) Расширения файлов, которые будут упакованы в APK (включая скрипты, графику и звуки)
+source.include_exts = py,png,jpg,wav,mp3,ttf,otf
 
-    - name: Сборка APK
-      run: ./gradlew assembleDebug
+# (str) Версия приложения
+version = 1.0.0
 
-    - name: Сохранение готового APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+# (list) Зависимости приложения. 
+# Для Pygame на Android ОБЯЗАТЕЛЬНО указывать именно в таком формате:
+requirements = python3,pygame
+
+# (str) Точка входа для Pygame (обязательный параметр для корректного запуска на Android)
+android.entrypoint = org.kivy.android.PythonActivity
+
+# (str) Ориентация экрана (portrait — вертикальная, landscape — горизонтальная)
+orientation = portrait
+
+# (bool) Полноэкранный режим (1 = скрыть статус-бар сверху, 0 = оставить)
+fullscreen = 1
+
+# (int) Минимальная поддерживаемая версия Android (21 = Android 5.0+)
+android.minapi = 21
+
+# (str) Архитектура процессора. Для большинства современных телефонов:
+android.archs = arm64-v8a
