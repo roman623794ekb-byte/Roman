@@ -12,7 +12,7 @@ package.domain = org.demotazh
 source.dir = .
 
 # (list) Расширения файлов, которые будут упакованы в APK (включая скрипты, графику и звуки)
-source.include_exts = py,png,jpg,wav,mp3,ttf,otf
+source.include_exts = py
 
 # (str) Версия приложения
 version = 1.0.0
