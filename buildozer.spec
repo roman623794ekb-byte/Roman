@@ -1,5 +1,5 @@
 # (str) Название вашей игры на экране телефона
-title = TicPygame
+title = icygame2
 
 # (str) Имя пакета (Строго маленькие латинские буквы, БЕЗ нижних подчеркиваний и спецсимволов)
 package.name = tictactoepygame
