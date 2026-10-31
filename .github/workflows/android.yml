@@ -1,36 +1,28 @@
-# (str) Название вашей игры на экране телефона
-title = Tic Tac Toe Pygame
+name: Build Python APK
 
-# (str) Имя пакета (Строго маленькие латинские буквы, БЕЗ нижних подчеркиваний и спецсимволов)
-package.name = tictactoepygame
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
-# (str) Домен пакета (уникальный идентификатор приложения)
-package.domain = org.demotazh
+jobs:
+  build:
+    runs-on: ubuntu-22.04
 
-# (str) Папка с исходным кодом (точка означает текущую директорию)
-source.dir = .
+    steps:
+    - name: Проверка репозитория
+      uses: actions/checkout@v4
 
-# (list) Расширения файлов, которые будут упакованы в APK (включая скрипты, графику и звуки)
-source.include_exts = py,png,jpg,wav,mp3,ttf,otf
+    - name: Сборка APK с помощью Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer
+      with:
+        workdir: .
+        buildozer_version: stable
 
-# (str) Версия приложения
-version = 1.0.0
-
-# (list) Зависимости приложения. 
-# Для Pygame на Android ОБЯЗАТЕЛЬНО указывать именно в таком формате:
-requirements = python3,pygame
-
-# (str) Точка входа для Pygame (обязательный параметр для корректного запуска на Android)
-android.entrypoint = org.kivy.android.PythonActivity
-
-# (str) Ориентация экрана (portrait — вертикальная, landscape — горизонтальная)
-orientation = portrait
-
-# (bool) Полноэкранный режим (1 = скрыть статус-бар сверху, 0 = оставить)
-fullscreen = 1
-
-# (int) Минимальная поддерживаемая версия Android (21 = Android 5.0+)
-android.minapi = 21
-
-# (str) Архитектура процессора. Для большинства современных телефонов:
-android.archs = arm64-v8a
+    - name: Сохранение готового APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: tictactoe-apk
+        path: ${{ steps.buildozer.outputs.filename }}
