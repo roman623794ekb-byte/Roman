@@ -18,7 +18,7 @@ source.include_exts = py,png,jpg,wav,mp3,ttf
 version = 0.1
 
 # (list) Критически важные зависимости приложения для Android
-requirements = python3==3.11.1,pygame_ce,numpy
+requirements = python3,pygame,numpy
 
 # (string) Ориентация экрана (фиксируем вертикальный режим под нашу нижнюю панель)
 orientation = portrait
