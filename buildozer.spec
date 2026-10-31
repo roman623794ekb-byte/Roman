@@ -1,21 +1,52 @@
-[app]
-title = Cyber Tic Tac Toe
-package.name = cybertictactoe
-package.domain = org.demotazh
-source.dir = .
-source.include_exts = py,png,jpg,wav,mp3,ttf
-version = 0.1
+on: [push, pull_request]
 
-# Используем официальные рецепты pygame и numpy
-requirements = python3,pygame,numpy
+env:
+  PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: 0
 
-orientation = portrait
-fullscreen = 1
-android.archs = arm64-v8a
-android.minapi = 21
-android.targetapi = 33
-android.copy_libs = 1
-
-[buildozer]
-log_level = 2
-warn_on_root = 1
+name: Android Integration
+jobs:
+  Integration:
+    strategy:
+      matrix:
+        os:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Setup Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.x'
+    - name: Setup Java
+      uses: actions/setup-java@v6
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - uses: actions/checkout@v7
+    - name: Setup environment
+      run: |
+        pip install .
+    - run: buildozer --help
+    - run: buildozer init
+    - name: SDK, NDK, and p4a download
+      run: |
+        sed -i.bak "s/# android.accept_sdk_license = False/android.accept_sdk_license = True/" buildozer.spec
+        sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
+        buildozer android p4a -- --help
+    # Install OS specific dependencies
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
+      # Required by some p4a recipes, but not
+      # installed by p4a on Linux.
+      run: |
+        sudo apt update
+        sudo apt -y install automake libltdl-dev
+    - name: Debug Build
+      run: |
+        touch main.py
+        buildozer android debug
+    - name: Release Build (aab)
+      run: |
+        touch main.py
+        export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
+        buildozer android release
