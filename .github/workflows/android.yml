@@ -11,16 +11,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build APK with Buildozer Action
-        uses: ArtemisG0old/buildozer-action@v1
+      # Официальное и поддерживаемое действие от команды Kivy/Buildozer
+      - name: Build APK with Official Buildozer Action
+        uses: kivy/buildozer-action@v1
         with:
-          repository_path: .
           command: buildozer -v android debug
-          buildozer_version: stable
 
+      # Современный и надёжный способ сохранения готового APK файла
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: CyberTicTacToe-APK
-          path: .buildozer/android/platform/build-arm64-v8a/dists/cybertictactoe__arm64-v8a/build/outputs/apk/debug/*.apk
-          if-no-files-found: warn
+          path: bin/*.apk
