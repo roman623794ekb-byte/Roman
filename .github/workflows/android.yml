@@ -30,9 +30,14 @@ jobs:
         pip3 install --upgrade pip
         pip3 install "buildozer>=1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Сборка APK с помощью Buildozer
+    - name: Сборка APK с отладочным логом
       run: |
+        # Принудительно чистим кэш платформы перед сборкой
+        buildozer android clean
+        # Запуск сборки с выводом всех внутренних ошибок компиляции
         buildozer -v android debug
+      env:
+        buildozer_log_level: 2
 
     - name: Сохранение готового APK
       uses: actions/upload-artifact@v4
