@@ -6,13 +6,10 @@ source.dir = .
 source.include_exts = py,png,jpg,wav,mp3,ttf,otf
 version = 1.0.0
 
-# Возвращаем чистый pygame (он сам подтянет нужные sdl2 модули)
-requirements = python3,pygame
+# Фиксируем стабильную версию Python (3.11), с которой совместим Pygame
+requirements = python3==3.11.9,pygame
 
-# Указываем правильный загрузчик именно для Pygame приложений
-p4a.bootstrap = pygame
 android.entrypoint = org.kivy.android.PythonActivity
-
 orientation = portrait
 fullscreen = 1
 android.minapi = 21
