@@ -1,38 +1,52 @@
-name: Build Python APK
+on: [push, pull_request]
 
-on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+env:
+  PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: 0
 
+name: Android Integration
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-
+  Integration:
+    strategy:
+      matrix:
+        os:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Проверка репозитория
-      uses: actions/checkout@v5  # Обновлено с v4 до v5, чтобы убрать предупреждение Node.js
-
-    - name: Настройка Java
-      uses: actions/setup-java@v5
+    - name: Setup Python
+      uses: actions/setup-python@v7
       with:
-        distribution: 'temurin'
+        python-version: '3.x'
+    - name: Setup Java
+      uses: actions/setup-java@v6
+      with:
         java-version: '17'
-
-    - name: Установка системных зависимостей
+        distribution: 'temurin'
+    - uses: actions/checkout@v7
+    - name: Setup environment
+      run: |
+        pip install .
+    - run: buildozer --help
+    - run: buildozer init
+    - name: SDK, NDK, and p4a download
+      run: |
+        sed -i.bak "s/# android.accept_sdk_license = False/android.accept_sdk_license = True/" buildozer.spec
+        sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
+        buildozer android p4a -- --help
+    # Install OS specific dependencies
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
+      # Required by some p4a recipes, but not
+      # installed by p4a on Linux.
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev \
-        libncurses5-dev libsqlite3-dev cmake libffi-dev libssl-dev python3-pip \
-        python3-setuptools libltdl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
-
-    - name: Установка Buildozer и Cython
+        sudo apt -y install automake libltdl-dev
+    - name: Debug Build
       run: |
-        pip3 install --upgrade pip
-        pip3 install "buildozer>=1.5.0" "cython<3.0.0" virtualenv
-
-    - name: Сборка APK с чистым Python 3.11
+        touch main.py
+        buildozer android debug
+    - name: Release Build (aab)
       run: |
-        rm -rf .buildozer/
-        buildozer -v android debug
+        touch main.py
+        export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
+        buildozer android release
