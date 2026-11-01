@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Проверка репозитория
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5  # Обновлено с v4 до v5, чтобы убрать предупреждение Node.js
 
     - name: Настройка Java
       uses: actions/setup-java@v5
@@ -34,6 +34,5 @@ jobs:
 
     - name: Сборка APK с чистым Python 3.11
       run: |
-        # Полное удаление кэша сборщика перед запуском компиляции
         rm -rf .buildozer/
         buildozer -v android debug
